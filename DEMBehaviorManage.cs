@@ -1224,7 +1224,7 @@ namespace O2Micro.Cobra.KALL10
             }
             //ushort efuse_mode = 0;
             bool mapping_disable = false;
-            if (msg.gm.sflname == "OPConfig")
+            if (msg.gm.sflname == "Register Config")
             {
                 /*ReadWord(0x50, ref efuse_mode);
                 efuse_mode &= 0xfffc;
@@ -1241,7 +1241,7 @@ namespace O2Micro.Cobra.KALL10
                 if (ret != LibErrorCode.IDS_ERR_SUCCESSFUL)
                     return ret;
             }
-            /*if (msg.gm.sflname == "OPConfig")
+            /*if (msg.gm.sflname == "Register Config")
             {
                 ReadWord(0x1e, ref efuse_mode);
                 efuse_mode &= 0xfffc;
@@ -1608,6 +1608,21 @@ namespace O2Micro.Cobra.KALL10
                             return ret;
                         break;
                     }
+                case ElementDefine.COMMAND.GET_EFUSE_HEX_DATA:
+                    {
+                        InitEfuseData();
+                        ret = ConvertPhysicalToHex(ref msg);
+                        if (ret != LibErrorCode.IDS_ERR_SUCCESSFUL)
+                            return ret;
+                        PrepareHexData();
+                        ret = GetEfuseHexData(ref msg);
+                        if (ret != LibErrorCode.IDS_ERR_SUCCESSFUL)
+                            return ret;
+                        ret = GetEfuseBinData(ref msg);
+                        if (ret != LibErrorCode.IDS_ERR_SUCCESSFUL)
+                            return ret;
+                        break;
+                    }
             }
             return ret;
         }
@@ -1650,6 +1665,15 @@ namespace O2Micro.Cobra.KALL10
             }
             return ret;
 #endif
+        }
+
+        private void InitEfuseData()
+        {
+            for (ushort i = ElementDefine.EF_USR_OFFSET; i <= ElementDefine.EF_USR_TOP; i++)
+            {
+                parent.m_EFRegImg[i].err = 0;
+                parent.m_EFRegImg[i].val = 0;
+            }
         }
 
         private void PrepareHexData()
@@ -1788,6 +1812,38 @@ namespace O2Micro.Cobra.KALL10
             }
             return ret;
 #endif
+        }
+
+        private UInt32 GetEfuseHexData(ref TASKMessage msg)
+        {
+            string tmp = "";
+            for (ushort i = ElementDefine.EF_USR_OFFSET; i <= ElementDefine.EF_USR_TOP; i++)
+            {
+                if (parent.m_EFRegImg[i].err != LibErrorCode.IDS_ERR_SUCCESSFUL)
+                    return parent.m_EFRegImg[i].err;
+                tmp += "0x" + i.ToString("X2") + ", " + "0x" + parent.m_EFRegImg[i].val.ToString("X4") + "\r\n";
+            }
+            msg.sm.efusehexdata = tmp;
+            return LibErrorCode.IDS_ERR_SUCCESSFUL;
+        }
+
+        private UInt32 GetEfuseBinData(ref TASKMessage msg)
+        {
+            List<byte> tmp = new List<byte>();
+            for (ushort i = ElementDefine.EF_USR_OFFSET; i <= ElementDefine.EF_USR_TOP; i++)
+            {
+                if (parent.m_EFRegImg[i].err != LibErrorCode.IDS_ERR_SUCCESSFUL)
+                    return parent.m_EFRegImg[i].err;
+                //tmp += "0x" + i.ToString("X2") + ", " + "0x" + parent.m_EFRegImg[i].val.ToString("X4") + "\r\n";
+                tmp.Add((byte)i);
+                byte hi = 0, low = 0;
+                hi = (byte)((parent.m_EFRegImg[i].val) >> 8);
+                low = (byte)(parent.m_EFRegImg[i].val);
+                tmp.Add(hi);
+                tmp.Add(low);
+            }
+            msg.sm.efusebindata = tmp;
+            return LibErrorCode.IDS_ERR_SUCCESSFUL;
         }
 
         public UInt32 EpBlockRead()

@@ -155,7 +155,8 @@ namespace O2Micro.Cobra.KALL10
             DOWNLOAD_WITH_POWER_CONTROL = 11,
             DOWNLOAD_WITHOUT_POWER_CONTROL = 12,
             READ_BACK_CHECK = 13,
-            ATE_CRC_CHECK = 14
+            ATE_CRC_CHECK = 14,
+            GET_EFUSE_HEX_DATA = 15
         }
     }
 }
