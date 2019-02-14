@@ -4981,11 +4981,11 @@
           <Order>0</Order>
           <NickName>Veoc</NickName>
           <Catalog>EOC</Catalog>
-          <DefValue>3260</DefValue>
+          <DefValue>3250</DefValue>
           <EditType>0</EditType>
           <Format>0</Format>
           <EventMode>0</EventMode>
-          <MinValue>3260</MinValue>
+          <MinValue>3250</MinValue>
           <MaxValue>4520</MaxValue>
           <Relations>
             <Item>0x000c0004</Item>
@@ -11087,11 +11087,11 @@
           <Order>0</Order>
           <NickName>Veoc</NickName>
           <Catalog>EOC</Catalog>
-          <DefValue>3260</DefValue>
+          <DefValue>3250</DefValue>
           <EditType>0</EditType>
           <Format>0</Format>
           <EventMode>0</EventMode>
-          <MinValue>3260</MinValue>
+          <MinValue>3250</MinValue>
           <MaxValue>4520</MaxValue>
           <Relations>
             <Item>0x000c0008</Item>

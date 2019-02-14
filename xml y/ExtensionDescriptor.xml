@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Root usage="ExtensionDescriptor" chip="KALL10" chiptype="7710" bustype ="I2C" libname ="O2Micro.Cobra.KALL10" AppVersion="2.00.03" OCEVersion="1.00.09.00" ProjectCode="OCEKL10Y">
+<Root usage="ExtensionDescriptor" chip="KALL10" chiptype="7710" bustype ="I2C" libname ="O2Micro.Cobra.KALL10" AppVersion="2.00.03" OCEVersion="1.00.10.00" ProjectCode="OCEKL10Y">
   <Part Name="DBConfig">
     <ChipName>KALL10|OZ7710</ChipName>
     <ChipVersion>C0|C1</ChipVersion>
     <UserType>Y</UserType>
-    <Date>20181214</Date>
+    <Date>20190213</Date>
     <HasCom>true</HasCom>
     <HasAMT>true</HasAMT>
   </Part>
