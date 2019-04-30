@@ -4453,8 +4453,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>-29.1</MinValue>
-          <MaxValue>12.9</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00026c06</Item>
             <Item>0x000c0002</Item>
@@ -4521,8 +4521,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>-35.9</MinValue>
-          <MaxValue>3.8</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00026f04</Item>
             <Item>0x000c0003</Item>
@@ -4557,8 +4557,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>34.9</MinValue>
-          <MaxValue>92.7</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00026d08</Item>
           </Relations>
@@ -4731,8 +4731,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>53.5</MinValue>
-          <MaxValue>91.5</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00026e08</Item>
           </Relations>
@@ -10363,8 +10363,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>-29.1</MinValue>
-          <MaxValue>12.9</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x000c0006</Item>
             <Item>0x00037c06</Item>
@@ -10455,8 +10455,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>-35.9</MinValue>
-          <MaxValue>3.8</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00037f04</Item>
             <Item>0x000c0007</Item>
@@ -10503,8 +10503,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>34.9</MinValue>
-          <MaxValue>92.7</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00037d08</Item>
           </Relations>
@@ -10737,8 +10737,8 @@
           <EditType>0</EditType>
           <Format>1</Format>
           <EventMode>0</EventMode>
-          <MinValue>53.5</MinValue>
-          <MaxValue>91.5</MaxValue>
+          <MinValue>-9999</MinValue>
+          <MaxValue>-9999</MaxValue>
           <Relations>
             <Item>0x00037e08</Item>
           </Relations>
