@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Root usage="ExtensionDescriptor" chip="KALL10" chiptype="7710" bustype ="I2C" libname ="O2Micro.Cobra.KALL10" AppVersion="2.00.03" OCEVersion="1.00.10.00" AMTEnable="false" ProjectCode="OCEKL10X">
+<Root usage="ExtensionDescriptor" chip="KALL10" chiptype="7710" bustype ="I2C" libname ="O2Micro.Cobra.KALL10" AppVersion="2.00.03" OCEVersion="1.00.11.00" AMTEnable="false" ProjectCode="OCEKL10X">
   <Part Name="DBConfig">
     <ChipName>KALL10|OZ7710</ChipName>
     <ChipVersion>C0|C1</ChipVersion>
     <UserType>X</UserType>
-    <Date>20190213</Date>
+    <Date>20190523</Date>
     <HasCom>true</HasCom>
     <HasAMT>true</HasAMT>
   </Part>
@@ -14,16 +14,30 @@
         <Button Name ="EraseBtn" IsEnable ="False" Visibility="Collapsed"/>
       </Layout>
     </Button>
-    <Button Label = "Expert"  Name = "Exper"         PanelName ="O2Micro.Cobra.ExperPanel"/>
+    <Button Label = "Expert"  Name = "Exper"         PanelName ="O2Micro.Cobra.ExperPanel">
+      <Configure>
+        <HidePro>false</HidePro>
+      </Configure>
+    </Button>
     <Button Label = "Register Config"  NoMapping="True"    Name ="DeviceConfig"   PanelName ="O2Micro.Cobra.DeviceConfigurationPanel">
       <Layout Name ="layout" bOrder ="true">
         <Button Name ="EraseBtn" IsEnable ="False" Visibility="Collapsed"/>
       </Layout>
+      <SubTask>
+        <SaveHex>16</SaveHex>
+        <GetMax>18</GetMax>
+        <GetMin>19</GetMin>
+      </SubTask>
     </Button>
     <Button Label = "EFUSE Config"   Name ="DeviceConfig"   PanelName ="O2Micro.Cobra.DeviceConfigurationPanel">
       <Layout Name ="layout" bOrder ="true">
         <Button Name ="EraseBtn" IsEnable ="False" Visibility="Collapsed"/>
       </Layout>
+      <SubTask>
+        <SaveHex>17</SaveHex>
+        <GetMax>18</GetMax>
+        <GetMin>19</GetMin>
+      </SubTask>
     </Button>
     <Button Label = "Scan"      DBModuleName="Scan"      Name = "Scan"         PanelName ="O2Micro.Cobra.MonitorPanel"/>
     <Button Label = "Mass Production"    DBModuleName="Production"        Name = "Production"  ShowVerify="False" ShowConfig="True" ShowHEX="False"         PanelName ="O2Micro.Cobra.ProductionPanel">
