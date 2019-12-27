@@ -1740,15 +1740,6 @@ namespace O2Micro.Cobra.KALL10
             }
         }
 
-        private void InitRegisterData()
-        {
-            for (ushort i = ElementDefine.OP_USR_OFFSET; i <= ElementDefine.OP_USR_TOP; i++)
-            {
-                parent.m_OpRegImg[i].err = 0;
-                parent.m_OpRegImg[i].val = 0;
-            }
-        }
-
         private void PrepareHexData()
         {
             parent.m_EFRegImg[ElementDefine.EF_USR_TOP].val |= 0x8000;    //Set Frozen bit in image
@@ -1813,7 +1804,7 @@ namespace O2Micro.Cobra.KALL10
         private Dictionary<string, ushort> LoadEFRegImgFromEFUSEBin(List<byte> efusebindata)
         {
             Dictionary<string, ushort> output = new Dictionary<string, ushort>();
-            for (int i = 0; i < 10; i++)    //0x66~0x6f
+            for (int i = 0; i < (ElementDefine.EF_USR_TOP - ElementDefine.EF_USR_OFFSET + 1); i++)
             {
                 output.Add(efusebindata[i * 3].ToString("X2"), SharedFormula.MAKEWORD(efusebindata[i * 3 + 2], efusebindata[i * 3 + 1]));
             }
@@ -1942,22 +1933,23 @@ namespace O2Micro.Cobra.KALL10
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             msg.sm.dic.Clear();
             UInt32 cellnum = (UInt32)parent.CellNum.phydata + 5;    //2~7 means 5~10
-            if (cellnum == 10)
+
+            if (cellnum == ElementDefine.CELL_NUMBER)
             {
-                for (byte i = 0; i < 10; i++)
+                for (byte i = 0; i < ElementDefine.CELL_NUMBER; i++)
                     msg.sm.dic.Add((uint)(i), true);
             }
             else
             {
-                for (byte i = 0; i < 10; i++)
+                for (byte i = 0; i < ElementDefine.CELL_NUMBER; i++)
                 {
                     if (i < cellnum - 1)
                         msg.sm.dic.Add((uint)i, true);
                     else if (i == cellnum - 1)
-                        msg.sm.dic.Add(9, false);
-                    else if (i < 9)
+                        msg.sm.dic.Add(ElementDefine.CELL_NUMBER - 1, false);
+                    else if (i < (ElementDefine.CELL_NUMBER -1))
                         msg.sm.dic.Add((uint)i, false);
-                    else if (i == 9)
+                    else if (i == (ElementDefine.CELL_NUMBER - 1))
                         msg.sm.dic.Add(cellnum - 1, true);
                 }
             }

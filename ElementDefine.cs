@@ -15,6 +15,7 @@ namespace O2Micro.Cobra.KALL10
     internal class ElementDefine
     {
         #region Chip Constant
+        internal const byte CELL_NUMBER = 10;
         internal const UInt16 EF_MEMORY_SIZE = 0x10;
         internal const UInt16 EF_MEMORY_OFFSET = 0x60;
         internal const UInt16 EF_ATE_OFFSET = 0x60;
