@@ -18,7 +18,7 @@ using System.IO;
 
 namespace O2Micro.Cobra.KALL10
 {
-    internal class DEMBehaviorManage
+    public class DEMBehaviorManage
     {
         private byte calATECRC;
         private byte calUSRCRC;
@@ -33,11 +33,12 @@ namespace O2Micro.Cobra.KALL10
         UInt16[] EFUSEUSRbuf = new UInt16[ElementDefine.EF_USR_TOP - ElementDefine.EF_USR_OFFSET + 1];      //Used for read back check
 
         private object m_lock = new object();
-        private CCommunicateManager m_Interface = new CCommunicateManager();
+        private CCommunicateManager m_Interface;// = new CCommunicateManager();
 
-        public void Init(object pParent)
+        public void Init(object pParent, CCommunicateManager pCom)
         {
             parent = (DEMDeviceManage)pParent;
+            m_Interface = pCom;
             CreateInterface();
 
         }
@@ -85,7 +86,7 @@ namespace O2Micro.Cobra.KALL10
         }
 
 
-        protected UInt32 SetWorkMode(ElementDefine.WORK_MODE wkm)
+        private UInt32 SetWorkMode(ElementDefine.WORK_MODE wkm)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             lock (m_lock)
@@ -96,7 +97,7 @@ namespace O2Micro.Cobra.KALL10
         }
 
 
-        protected UInt32 GetWorkMode(ref ElementDefine.WORK_MODE wkm)
+        private UInt32 GetWorkMode(ref ElementDefine.WORK_MODE wkm)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             lock (m_lock)
@@ -127,7 +128,7 @@ namespace O2Micro.Cobra.KALL10
             return ret;
         }
 
-        protected UInt32 GetCellBalance(ref ElementDefine.CELL_BALANCE cb)
+        private UInt32 GetCellBalance(ref ElementDefine.CELL_BALANCE cb)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             lock (m_lock)
@@ -137,7 +138,7 @@ namespace O2Micro.Cobra.KALL10
             return ret;
         }
 
-        protected UInt32 SetCellBalance(ElementDefine.CELL_BALANCE cb)
+        private UInt32 SetCellBalance(ElementDefine.CELL_BALANCE cb)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             lock (m_lock)
@@ -175,7 +176,7 @@ namespace O2Micro.Cobra.KALL10
             }
             return ret;
         }
-        
+
         protected UInt32 PowerOn()
         {
             UInt32 ret = 0;
@@ -363,17 +364,17 @@ namespace O2Micro.Cobra.KALL10
 #endif
         }
 
-        protected UInt32 OnGetWorkMode(ref ElementDefine.WORK_MODE wkm)
+        private UInt32 OnGetWorkMode(ref ElementDefine.WORK_MODE wkm)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             ushort buf = 0;
-            ret = OnReadWord(ElementDefine.WORKMODE_OFFSET,ref buf);
+            ret = OnReadWord(ElementDefine.WORKMODE_OFFSET, ref buf);
             buf &= 0x0003;
             wkm = (ElementDefine.WORK_MODE)buf;
             return ret;
         }
 
-        protected UInt32 OnSetWorkMode(ElementDefine.WORK_MODE wkm)
+        private UInt32 OnSetWorkMode(ElementDefine.WORK_MODE wkm)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             ret = OnWriteWord(ElementDefine.WORKMODE_OFFSET, (ushort)((ushort)wkm | 0x8000));
@@ -403,7 +404,7 @@ namespace O2Micro.Cobra.KALL10
             return ret;
         }
 
-        protected UInt32 OnGetCellBalance(ref ElementDefine.CELL_BALANCE cb)
+        private UInt32 OnGetCellBalance(ref ElementDefine.CELL_BALANCE cb)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             ushort buf = 0;
@@ -413,11 +414,11 @@ namespace O2Micro.Cobra.KALL10
             cb = (ElementDefine.CELL_BALANCE)buf;
             return ret;
         }
-        protected UInt32 OnSetCellBalance(ElementDefine.CELL_BALANCE cb)
+        private UInt32 OnSetCellBalance(ElementDefine.CELL_BALANCE cb)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
             ushort buf = 0;
-            ret = OnReadWord(ElementDefine.CB_OFFSET,ref buf);
+            ret = OnReadWord(ElementDefine.CB_OFFSET, ref buf);
             buf &= 0x9fff;
             buf |= (ushort)((ushort)cb << 13);
             ret = OnWriteWord(ElementDefine.CB_OFFSET, buf);
@@ -1629,7 +1630,7 @@ namespace O2Micro.Cobra.KALL10
                         if (ret != LibErrorCode.IDS_ERR_SUCCESSFUL)
                             return ret;
 
-                        string binfilename = Path.Combine(Path.GetDirectoryName(msg.sub_task_json), 
+                        string binfilename = Path.Combine(Path.GetDirectoryName(msg.sub_task_json),
                             Path.GetFileNameWithoutExtension(msg.sub_task_json) + ".bin");
 
                         Encoding ec = Encoding.UTF8;
@@ -1647,7 +1648,10 @@ namespace O2Micro.Cobra.KALL10
                         string binFileName = msg.sub_task_json;
 
                         var blist = SharedAPI.LoadBinFileToList(binFileName);
-                        ret = CheckBinData(blist);
+                        if (blist.Count == 0)
+                            ret = LibErrorCode.IDS_ERR_DEM_LOAD_BIN_FILE_ERROR;
+                        else
+                            ret = CheckBinData(blist);
                         break;
                     }
                 case ElementDefine.COMMAND.GET_MAX_VALUE:
@@ -1702,25 +1706,20 @@ namespace O2Micro.Cobra.KALL10
         public uint CheckBinData(List<byte> blist)
         {
             UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
-            if (blist.Count == 0)
-                ret = 1;    //???
+            int length = (ElementDefine.EF_USR_TOP - ElementDefine.EF_USR_OFFSET + 1);
+            length *= 3;    //一个字节地址，两个字节数值
+            if (blist.Count != length)
+            {
+                ret = LibErrorCode.IDS_ERR_DEM_BIN_LENGTH_ERROR;
+            }
             else
             {
-                int length = (ElementDefine.EF_USR_TOP - ElementDefine.EF_USR_OFFSET + 1);
-                length *= 3;    //一个字节地址，两个字节数值
-                if (blist.Count != length)
+                for (int i = ElementDefine.EF_USR_OFFSET, j = 0; i <= ElementDefine.EF_USR_TOP; i++, j++)
                 {
-                    ret = 1;    //???
-                }
-                else
-                {
-                    for (int i = ElementDefine.EF_USR_OFFSET, j = 0; i <= ElementDefine.EF_USR_TOP; i++, j++)
+                    if (blist[j * 3] != i)
                     {
-                        if (blist[j * 3] != i)
-                        {
-                            ret = 1;
-                            break;
-                        }
+                        ret = LibErrorCode.IDS_ERR_DEM_BIN_ADDRESS_ERROR;
+                        break;
                     }
                 }
             }
@@ -1983,7 +1982,7 @@ namespace O2Micro.Cobra.KALL10
                         msg.sm.dic.Add((uint)i, true);
                     else if (i == cellnum - 1)
                         msg.sm.dic.Add(ElementDefine.CELL_NUMBER - 1, false);
-                    else if (i < (ElementDefine.CELL_NUMBER -1))
+                    else if (i < (ElementDefine.CELL_NUMBER - 1))
                         msg.sm.dic.Add((uint)i, false);
                     else if (i == (ElementDefine.CELL_NUMBER - 1))
                         msg.sm.dic.Add(cellnum - 1, true);
