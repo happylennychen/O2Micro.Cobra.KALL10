@@ -1642,6 +1642,14 @@ namespace O2Micro.Cobra.KALL10
                         }
                         break;
                     }
+                case ElementDefine.COMMAND.BIN_FILE_CHECK:
+                    {
+                        string binFileName = msg.sub_task_json;
+
+                        var blist = SharedAPI.LoadBinFileToList(binFileName);
+                        ret = CheckBinData(blist);
+                        break;
+                    }
                 case ElementDefine.COMMAND.GET_MAX_VALUE:
                     {
                         param = msg.task_parameterlist.parameterlist[0];
@@ -1687,6 +1695,34 @@ namespace O2Micro.Cobra.KALL10
                             return ret;
                         break;
                     }
+            }
+            return ret;
+        }
+
+        public uint CheckBinData(List<byte> blist)
+        {
+            UInt32 ret = LibErrorCode.IDS_ERR_SUCCESSFUL;
+            if (blist.Count == 0)
+                ret = 1;    //???
+            else
+            {
+                int length = (ElementDefine.EF_USR_TOP - ElementDefine.EF_USR_OFFSET + 1);
+                length *= 3;    //一个字节地址，两个字节数值
+                if (blist.Count != length)
+                {
+                    ret = 1;    //???
+                }
+                else
+                {
+                    for (int i = ElementDefine.EF_USR_OFFSET, j = 0; i <= ElementDefine.EF_USR_TOP; i++, j++)
+                    {
+                        if (blist[j * 3] != i)
+                        {
+                            ret = 1;
+                            break;
+                        }
+                    }
+                }
             }
             return ret;
         }
